@@ -116,7 +116,7 @@ int main()
 	// -----------
 	while (!glfwWindowShouldClose(window))
 	{
-		// Input 
+		// Input
 		// -----
 		processInput(window);
 
