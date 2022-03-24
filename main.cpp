@@ -96,7 +96,7 @@ int main()
 
 	// Initialize FPS object
 	// ---------------------
-	FPS fpsTime;
+	FPS fpsProgram;
 
 	stone.Bind();
 
@@ -110,15 +110,15 @@ int main()
 
 		// FPS Tick
 		// --------
-		fpsTime.Tick();
-		std::cout << fpsTime.getFPS() << std::endl;
+		fpsProgram.Tick();
+		std::cout << fpsProgram.getFrameTime_ms() << std::endl;
 
 		// Rendering
 		// ---------
 		glClearColor(48.f/255, 48.f/255, 48.f/255, 1.0f);				// Clear screen color buffer
 		glClear(GL_COLOR_BUFFER_BIT);									// "
 
-		shaderProgram.Activate();										// Use  shaderprogram we just created
+		shaderProgram.Activate();										// Use  shader program we just created
 
 		stone.Bind();
 		wood.Bind();

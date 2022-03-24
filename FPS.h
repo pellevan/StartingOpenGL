@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <chrono>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -12,11 +13,11 @@ class FPS
 
 		void Tick();												// Tick
 
-		double getFrameTime();										// Get the time it took for the frame
-		double getFPS();											// Get the frames per second with current frametime
+		double getFrameTime_sec() const;								// Get the time it took for the frame
+		double getFrameTime_ms() const;
+		double getFPS() const;										// Get the frames per second with current frametime
 	private:
-		double previousTime;
-		double currentTime;
-
-		double frameTime;
+		std::chrono::high_resolution_clock::time_point previousTime, currentTime;
+		float frametime_s;
+		long int frametime_us;
 };

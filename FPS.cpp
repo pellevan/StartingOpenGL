@@ -1,26 +1,31 @@
 #include "FPS.h"
 
+
 FPS::FPS()
 {
-	currentTime = glfwGetTime();
-	previousTime = 0.0;
-
-	frameTime = 0.0;
+	previousTime = currentTime = std::chrono::high_resolution_clock::now();
 }
 
 void FPS::Tick()
 {
-	double currentTime = glfwGetTime();
-	frameTime = currentTime - previousTime;
+	currentTime = std::chrono::high_resolution_clock::now();
+	frametime_us = (std::chrono::duration_cast<std::chrono::microseconds>(currentTime - previousTime).count());
+	frametime_s = frametime_us / 1e6f;
 	previousTime = currentTime;
 }
 
-double FPS::getFrameTime()
+double FPS::getFrameTime_sec() const
 {
-	return frameTime;
+	return frametime_s;
 }
 
-double FPS::getFPS()
+double FPS::getFrameTime_ms() const
 {
-	return 1.0 / frameTime;
+	return frametime_us / 1000.f;
+}
+
+
+double FPS::getFPS() const
+{
+	return 1.0f / getFrameTime_sec(); // NOT CORRECT WAY OF RETRIEVING FPS ---> TO IMPROVE
 }
