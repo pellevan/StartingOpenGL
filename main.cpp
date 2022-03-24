@@ -10,6 +10,7 @@
 #include"EBO.h"
 
 #include"FPS.h"
+#include "Texture.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -38,9 +39,9 @@ int main()
 	// GLFW initialize and configure
 	// -----------------------------
 	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);						// Hint version we are using (3.3) 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);						// "
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);		// Using core profile
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);					// Hint version we are using (3.3) 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);					// "
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);	// Using core profile
 
 	// GLFW window creation
 	// --------------------
@@ -65,27 +66,7 @@ int main()
 	}
 	glViewport(0, 0, 800, 600);											// Tell OpenGL the size of the rendering window
 
-	// STB 
-	// ---
-	int width, height, nrChannels;
-	unsigned char* data = stbi_load("tex_wood.jpg", &width, &height, &nrChannels, 0);
 
-	unsigned int texture1, texture2;
-	glGenTextures(1, &texture1);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture1);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	unsigned char* data2 = stbi_load("tex_stone.jpg", &width, &height, &nrChannels, 0);
-	glGenTextures(1, &texture2);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, texture2);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data2);
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	stbi_image_free(data);
-	stbi_image_free(data2);
 
 	// Build and compile shader program
 	// --------------------------------
@@ -104,13 +85,20 @@ int main()
 	VBO1.Unbind();
 	EBO1.Unbind();
 
-	shaderProgram.Activate();
-	glUniform1i(glGetUniformLocation(shaderProgram.ID, "texture1"), 0);
-	glUniform1i(glGetUniformLocation(shaderProgram.ID, "texture2"), 1);
+
+
+	// Texture stuff
+	// -------------
+	Texture wood("tex_wood.jpg", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
+	wood.tex_unit(shaderProgram, "texture1", 0);
+	Texture stone("tex_stone.jpg", GL_TEXTURE_2D, GL_TEXTURE1, GL_RGB, GL_UNSIGNED_BYTE);
+	stone.tex_unit(shaderProgram, "texture2", 1);	
 
 	// Initialize FPS object
 	// ---------------------
 	FPS fpsTime;
+
+	stone.Bind();
 
 	// Render loop
 	// -----------
@@ -123,13 +111,18 @@ int main()
 		// FPS Tick
 		// --------
 		fpsTime.Tick();
+		std::cout << fpsTime.getFPS() << std::endl;
 
 		// Rendering
 		// ---------
 		glClearColor(48.f/255, 48.f/255, 48.f/255, 1.0f);				// Clear screen color buffer
 		glClear(GL_COLOR_BUFFER_BIT);									// "
 
-		shaderProgram.Activate();										// Use  shaderprogram we just created 
+		shaderProgram.Activate();										// Use  shaderprogram we just created
+
+		stone.Bind();
+		wood.Bind();
+
 		VAO1.Bind();													// Bind VAO to keep it organized
 		glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, nullptr);
 
