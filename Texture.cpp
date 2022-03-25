@@ -18,8 +18,8 @@ Texture::Texture(const char* image, const GLenum tex_type, const GLenum slot, co
 	glBindTexture(tex_type, id);
 
 	// Configures the algorithm used to make images smaller or bigger
-	glTexParameteri(tex_type, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(tex_type, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(tex_type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(tex_type, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
 	// Configure the way the texture repeats 
 	glTexParameteri(tex_type, GL_TEXTURE_WRAP_S, GL_REPEAT);
