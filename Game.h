@@ -1,6 +1,23 @@
 ﻿#pragma once
 
+#include <iostream>
+#include <Windows.h>
+
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <stb/stb_image.h>
+
+#include"shaderClass.h"
+#include"VAO.h"
+#include"VBO.h"
+#include"EBO.h"
+
+#include"FPS.h"
+#include "Texture.h"
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class Game
 {
@@ -21,4 +38,15 @@ public:
 
 private:
 	GLFWwindow* window = nullptr;
+	Shader* shaderProgram = nullptr;
+
+	VAO* VAO1;
+	VBO* VBO1;
+
+	Texture* stone;
+	Texture* wood;
+
+	GLuint model_location;
+	GLuint view_location;
+	GLuint projection_location;
 };
