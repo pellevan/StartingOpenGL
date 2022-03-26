@@ -100,6 +100,10 @@ void Game::OnApplicationQuit()
 
 void Game::Update(float deltaTime)
 {
+	std::cout << deltaTime << "\n";
+	int screenWidth, screenHeight;
+	glfwGetWindowSize(window, &screenWidth, &screenHeight);
+
 	// Rendering
 	// ---------
 	glClearColor(48.f / 255, 48.f / 255, 48.f / 255, 1.0f);
@@ -116,7 +120,7 @@ void Game::Update(float deltaTime)
 
 	model = glm::rotate(model, static_cast<float>(glfwGetTime()) * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
 	view = glm::translate(view, glm::vec3(0.f, 0.f, -3.f));
-	projection = glm::perspective(glm::radians(45.f), static_cast<float>(800) / static_cast<float>(600), 0.1f, 100.f);
+	projection = glm::perspective(glm::radians(45.f), static_cast<float>(screenWidth) / static_cast<float>(screenHeight), 0.1f, 100.f);
 
 	// Pass them to the shader
 	// -----------------------

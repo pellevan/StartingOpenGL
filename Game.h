@@ -12,7 +12,6 @@
 #include"VBO.h"
 #include"EBO.h"
 
-#include"FPS.h"
 #include "Texture.h"
 
 #include <glm/glm.hpp>
@@ -40,11 +39,11 @@ private:
 	GLFWwindow* window = nullptr;
 	Shader* shaderProgram = nullptr;
 
-	VAO* VAO1;
-	VBO* VBO1;
+	VAO* VAO1 = nullptr;
+	VBO* VBO1 = nullptr;
 
-	Texture* stone;
-	Texture* wood;
+	Texture* stone = nullptr;
+	Texture* wood = nullptr;
 
 	GLuint model_location;
 	GLuint view_location;

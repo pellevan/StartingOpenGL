@@ -10,7 +10,7 @@
 #include"VBO.h"
 #include"EBO.h"
 
-#include"FPS.h"
+#include "Timer.h"
 #include "Texture.h"
 #include "Game.h"
 
@@ -36,15 +36,13 @@ void framebuffer_size_callback(GLFWwindow* window, const int width, const int he
 
 int main()
 {
-	// Implement deltaTime calculation here
-	// ------------------------------------
-	float deltaTime = 0.f;
-
 	// Initialize values
 	// -----------------
 	static bool firstframe = true;
 	Game* game = nullptr;
-	FPS* fpsMath = nullptr;
+	Timer deltaTime;
+	Timer gameTime;
+	Timer renderTime;
 
 	// GLFW initialize and configure
 	// -----------------------------
@@ -63,11 +61,11 @@ int main()
 	}
 
 	glfwMakeContextCurrent(window);	// Make created window active (current) context
-	glfwSwapInterval(0);
+	glfwSwapInterval(0);  // COMMENT DO ENABLE VSYNC
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);	// When the user resizes the window, call this Callback function
 
 
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
@@ -75,7 +73,6 @@ int main()
 	glViewport(0, 0, WIDTH, HEIGHT); // Tell OpenGL the size of the rendering window
 	glEnable(GL_DEPTH_TEST);
 
-	fpsMath = new FPS();
 	game = new Game();
 
 	game->SetTarget(window);
@@ -84,15 +81,19 @@ int main()
 	// ----------
 	while (!glfwWindowShouldClose(game->getWindow()))
 	{
+		// Start deltaTime timer
+		// ---------------------
+		auto delta_time = deltaTime.getElapsedSec();
+		deltaTime.Reset();
+
+		// If first frame, then Start() (happens only once)
 		if (firstframe)
 		{
 			game->Start();
 			firstframe = false;
 		}
-
-		fpsMath->Tick();
-		game->Update(static_cast<float>(fpsMath->getFrameTime_sec()));
-		game->LateUpdate(static_cast<float>(fpsMath->getFrameTime_sec()));
+		game->Update(static_cast<float>(delta_time));
+		game->LateUpdate(static_cast<float>(delta_time));
 
 		glfwSwapBuffers(game->getWindow());
 		glfwPollEvents();
@@ -109,7 +110,6 @@ int main()
 	glfwDestroyWindow(game->getWindow());
 	glfwTerminate();
 
-	delete fpsMath;
 	delete game;
 
 	return 0;
